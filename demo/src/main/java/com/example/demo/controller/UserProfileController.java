@@ -9,6 +9,8 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.UserProfile;
@@ -17,7 +19,7 @@ import com.example.demo.model.UserProfile;
 public class UserProfileController {
 
 	private Map<String, UserProfile> userMap;
-	
+
 	@PostConstruct
 	public void init() {
 		userMap = new HashMap<String, UserProfile>();
@@ -25,14 +27,20 @@ public class UserProfileController {
 		userMap.put("2", new UserProfile("2", "adan", "010-1234-5678", "인천시 부평구"));
 		userMap.put("3", new UserProfile("3", "hello", "010-7777-7777", "서울특별시 구로구"));
 	}
-	
+
 	@GetMapping("/user/{id}")
 	public UserProfile getUserProfile(@PathVariable("id") String id) {
 		return userMap.get(id);
 	}
-	
+
 	@GetMapping("user/all")
 	public List<UserProfile> getUserProfileList() {
 		return new ArrayList<UserProfile>(userMap.values());
+	}
+
+	@PutMapping("create/user")
+	public void createUserProfile(@RequestParam("id") String id, @RequestParam("name") String name, @RequestParam("phone") String phone, @RequestParam("address") String address) {
+		UserProfile user = new UserProfile(id, name, phone, address);
+		userMap.put(id, user);
 	}
 }
